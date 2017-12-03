@@ -1,6 +1,35 @@
 from math import ceil, sqrt
+from functools import reduce
 
-def coord_to_pos(x, y):
+
+def spiral_at_pos(pos):
+
+    if pos == 1:
+        return 1
+
+    coord = pos_to_coord(pos)
+    neighbours = sorted(filter(lambda x: x < pos,
+                        map(coord_to_pos, [
+                            (coord[0]+1, coord[1]+1),
+                            (coord[0]+1, coord[1]),
+                            (coord[0]+1, coord[1]-1),
+                            (coord[0], coord[1]+1),
+                            (coord[0], coord[1]-1),
+                            (coord[0]-1, coord[1]+1),
+                            (coord[0]-1, coord[1]),
+                            (coord[0]-1, coord[1]-1),
+                        ])))
+
+    print('meg nem jo, 10-nel elcsuszik')
+
+    value = reduce(lambda p, c: p + spiral_at_pos(c), neighbours)
+
+    return value
+
+
+def coord_to_pos(coord):
+    x = coord[0]
+    y = coord[1]
     pos = 1
 
     if x == 0 and y == 0:
@@ -54,7 +83,6 @@ def pos_to_coord(pos):
         x = - ((box-1)//2 - diff % (box-1))
     else:  # sidenum == 0
         # bottom
-        print('bottom', box, diff, sidenum)
         x = - (box-1) // 2
         y = (box-1)//2 - diff % (box-1)
 
