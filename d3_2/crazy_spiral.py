@@ -2,10 +2,17 @@ from math import ceil, sqrt
 from functools import reduce
 
 
+SPIRAL_CACHE = {
+    0: 0,
+    1: 1
+}
+
+
 def spiral_at_pos(pos):
 
-    if pos == 1:
-        return 1
+    # "memonization"
+    if pos in SPIRAL_CACHE:
+        return SPIRAL_CACHE[pos]
 
     coord = pos_to_coord(pos)
     neighbours = sorted(filter(lambda x: x < pos,
@@ -20,9 +27,9 @@ def spiral_at_pos(pos):
                             (coord[0]-1, coord[1]-1),
                         ])))
 
-    print('meg nem jo, 10-nel elcsuszik')
+    value = reduce(lambda p, c: p + spiral_at_pos(c), neighbours, 0)
 
-    value = reduce(lambda p, c: p + spiral_at_pos(c), neighbours)
+    SPIRAL_CACHE[pos] = value
 
     return value
 
@@ -87,3 +94,16 @@ def pos_to_coord(pos):
         y = (box-1)//2 - diff % (box-1)
 
     return (x, y)
+
+
+INPUT = 277678
+
+
+if __name__ == '__main__':
+    num = 0
+    i = 1
+    while num < INPUT:
+        i += 1
+        num = spiral_at_pos(i)
+
+    print(num)
