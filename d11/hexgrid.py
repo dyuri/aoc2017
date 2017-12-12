@@ -1,16 +1,37 @@
-STEPS = 'ne,ne,s,s'.replace(',', '')
+from collections import Counter
 
-DIRECTIONS = {}
+steps = open('hexgrid.txt', 'r').read().strip().split(',')
 
-for s in STEPS:
-    DIRECTIONS[s] = DIRECTIONS.get(s, 0) + 1
+x, y, z = 0, 0, 0
 
-s = DIRECTIONS.get('s', 0)
-n = DIRECTIONS.get('n', 0)
-e = DIRECTIONS.get('e', 0)
-w = DIRECTIONS.get('w', 0)
-dsn = abs(s - n)
-dew = abs(e - w)
-steps = max(dsn-min(e, w), dew)
 
-print("steps: {}".format(steps))
+def hex_dist(x, y, z):
+    return (abs(x) + abs(y) + abs(z)) / 2
+
+
+distances = []
+
+for step in steps:
+    if step == "n":
+        y += 1
+        z -= 1
+    elif step == "s":
+        y -= 1
+        z += 1
+    elif step == "ne":
+        x += 1
+        z -= 1
+    elif step == "sw":
+        x -= 1
+        z += 1
+    elif step == "nw":
+        x -= 1
+        y += 1
+    elif step == "se":
+        x += 1
+        y -= 1
+
+    distances.append(hex_dist(x, y, z))
+
+dist = hex_dist(x, y, z)
+print("distance: {}, max: {}".format(dist, max(distances)))
