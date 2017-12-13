@@ -23,17 +23,28 @@ for l in COMMS.split("\n"):
                 "remaining": friends
             }
 
-node0 = comms[0]
-processed0 = node0["processed"]
-remaining0 = node0["remaining"]
+groups = []
+while len(comms):
+    key0, node0 = comms.popitem()
+    processed0 = node0["processed"]
+    remaining0 = node0["remaining"]
 
-while len(remaining0):
-    next = remaining0.pop()
-    processed0.add(next)
-    nextcomms = comms[next]
-    nextproc = nextcomms["processed"]
-    nextrem = nextcomms["remaining"]
-    newcomms = nextrem.difference(processed0)
-    remaining0.update(newcomms)
+    while len(remaining0):
+        next = remaining0.pop()
+        processed0.add(next)
+        if next in comms:
+            nextcomms = comms[next]
+            nextproc = nextcomms["processed"]
+            nextrem = nextcomms["remaining"]
+            newcomms = nextrem.difference(processed0)
+            remaining0.update(newcomms)
+            del comms[next]
 
-print(len(processed0))
+    groups.append(node0)
+    if key0 in comms:
+        del comms[key0]
+
+print("size of group 0: {}".format([
+    len(g["processed"]) for g in groups if 0 in g["processed"]
+]))
+print("groups: {}".format(len(groups)))
